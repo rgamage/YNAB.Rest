@@ -126,29 +126,6 @@ namespace YNAB.RestConsole
 
                 payees.ToList().ForEach(p => Console.WriteLine($"{p.Id} | {p.Name}"));
 
-                Console.WriteLine($"Fetching Categories...");
-                var categoryResponse = await api.GetCategories(budget.Id);
-                var categoryGroups = categoryResponse.Data.CategoryGroups;
-                Console.WriteLine($"Found {categoryGroups.Count} category groups!");
-                Console.WriteLine();
-                categoryGroups.ToList().ForEach(p => Console.WriteLine($"{p.Id} | {p.Name}"));
-                var categories = categoryGroups.SelectMany(p => p.Categories).OrderBy(x => x.CategoryGroupId).ThenBy(x => x.Name).ToList();
-                Console.WriteLine($"Found {categories.Count} categories!");
-                Console.WriteLine();
-                categories.ToList().ForEach(p => Console.WriteLine($"{p.Id} | {p.Name}"));
-
-                var catWithGoal = categories.FirstOrDefault(x => x.GoalType.HasValue);
-                var catWithoutGoal = categories.FirstOrDefault(x => !x.GoalType.HasValue);
-                if (catWithGoal != null)
-                    Console.WriteLine($"{catWithGoal.Id} | {catWithGoal.GoalType} | {catWithGoal.GoalTargetMonth}");
-                else
-                    Console.WriteLine("No category with goals!");
-
-                if (catWithoutGoal != null)
-                    Console.WriteLine($"{catWithoutGoal.Id} | {catWithoutGoal.GoalType} | {catWithoutGoal.GoalTargetMonth}");
-                else
-                    await Console.Out.WriteLineAsync("No category without goals!");
-
                 Console.WriteLine("Getting scheduled transactions...");
                 var scheduledTransactionsResponse = await api.GetScheduledTransactions(budget.Id);
                 var scheduledTransactions = scheduledTransactionsResponse.Data.ScheduledTransactions.Where(x => !x.Deleted).ToList();
@@ -156,10 +133,7 @@ namespace YNAB.RestConsole
                 Console.WriteLine();
 
                 scheduledTransactions.ToList().ForEach(x => Console.WriteLine($"{x.Id} | {x.PayeeId} | {x.CategoryId} | {x.Amount.YnabLongToDecimal():C2} | {x.FlagColor}"));
-            }
-            catch (ApiException apiEx)
-            {
-                Console.WriteLine("Error: " + apiEx.Content);
+
             }
             catch (Exception ex)
             {
