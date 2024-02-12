@@ -126,13 +126,16 @@ namespace YNAB.RestConsole
 
                 payees.ToList().ForEach(p => Console.WriteLine($"{p.Id} | {p.Name}"));
 
-                Console.WriteLine("Getting scheduled transactions...");
-                var scheduledTransactionsResponse = await api.GetScheduledTransactions(budget.Id);
-                var scheduledTransactions = scheduledTransactionsResponse.Data.ScheduledTransactions.Where(x => !x.Deleted).ToList();
-                Console.WriteLine($"Found {scheduledTransactions.Count} scheduled transactions!");
+                Console.WriteLine($"Fetching Categories...");
+                var categoryResponse = await api.GetCategories(budget.Id);
+                var categoryGroups = categoryResponse.Data.CategoryGroups;
+                Console.WriteLine($"Found {categoryGroups.Count} category groups!");
                 Console.WriteLine();
-
-                scheduledTransactions.ToList().ForEach(x => Console.WriteLine($"{x.Id} | {x.PayeeId} | {x.CategoryId} | {x.Amount.YnabLongToDecimal():C2} | {x.FlagColor}"));
+                categoryGroups.ToList().ForEach(p => Console.WriteLine($"{p.Id} | {p.Name}"));
+                var categories = categoryGroups.SelectMany(p => p.Categories).OrderBy(x => x.CategoryGroupId).ThenBy(x => x.Name).ToList();
+                Console.WriteLine($"Found {categories.Count} categories!");
+                Console.WriteLine();
+                categories.ToList().ForEach(p => Console.WriteLine($"{p.Id} | {p.Name}"));
 
             }
             catch (Exception ex)
