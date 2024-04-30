@@ -17,6 +17,11 @@ namespace YNAB.Rest
         Red, Orange, Yellow, Green, Blue, Purple
     }
 
+    public enum DebtTransactionType
+    {
+        Payment, Refund, Fee, Interest, Escrow, BalanceAdjustment, Credit, Charge
+    }
+
     public class Transaction
     {
         public string Id { get; set; }
@@ -28,6 +33,7 @@ namespace YNAB.Rest
         public bool Approved { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
         public FlagColor? FlagColor { get; set; }
+        public string FlagName { get; set; }
         public string AccountId { get; set; }
         public string PayeeId { get; set; }
         public string CategoryId { get; set; }
@@ -37,7 +43,11 @@ namespace YNAB.Rest
         public string AccountName { get; set; }
         public string PayeeName { get; set; }
         public string CategoryName { get; set; }
+        [JsonProperty(PropertyName = "subtransactions")]
         public IList<SubTransaction> SubTransactions { get; set; }
+        public string MatchedTransactionId { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public DebtTransactionType? DebtTransactionType { get; set; }
 
         /*
 {
