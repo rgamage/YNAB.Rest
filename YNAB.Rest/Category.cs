@@ -108,6 +108,8 @@ namespace YNAB.Rest
         public int? GoalUnderFunded { get; set; }
         public int? GoalOverallFunded { get; set; }
         public int? GoalOverallLeft { get; set; }
+        public int? GoalTarget { get; set; }
+        public string GoalTargetMonth { get; set; }
         /* JSON
 {
   "data": {
@@ -141,4 +143,4 @@ namespace YNAB.Rest
          */
     }
 }
->>>>>>> 3ae49f0 (added missing Category model properties)
+>>>>>>> 127030b (updated Category model)
